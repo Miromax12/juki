@@ -1,67 +1,74 @@
 /**
  * Logic for calculating Growing Degree Days (GDD)
- * and emergence prediction for Lucanus cervus.
+ * and emergence prediction for multiple insect species.
  */
 
-export const CONFIG = {
-  TBASE: 6.6,
-  THRESHOLD_START: 620,
-  THRESHOLD_PEAK: 810,
-  OPTIMAL_TEMP: 24, // Preferred flight temp
+export const SPECIES_CONFIG = {
+  stag_beetle: {
+    name: 'Жук-олень',
+    scientificName: 'Lucanus cervus',
+    taxonId: 47258,
+    tBase: 6.6,
+    thresholdStart: 620,
+    thresholdPeak: 810,
+    optimalTemp: 24
+  },
+  ground_beetle: {
+    name: 'Жужелица',
+    scientificName: 'Carabus',
+    taxonId: 49051,
+    tBase: 5.0,
+    thresholdStart: 250,
+    thresholdPeak: 400,
+    optimalTemp: 20
+  }
 };
 
 /**
  * Calculates GDD for a single day.
- * @param {number} tMax 
- * @param {number} tMin 
- * @returns {number}
  */
-export const calculateDailyGDD = (tMax, tMin) => {
+export const calculateDailyGDD = (tMax, tMin, tBase) => {
   const tAvg = (tMax + tMin) / 2;
-  return Math.max(0, tAvg - CONFIG.TBASE);
+  return Math.max(0, tAvg - tBase);
 };
 
 /**
  * Calculates cumulative GDD from an array of daily temps.
- * @param {Array<{tMax: number, tMin: number}>} dailyData 
- * @returns {Array<number>}
  */
-export const calculateCumulativeGDD = (dailyData) => {
+export const calculateCumulativeGDD = (dailyData, tBase) => {
   let cumulative = 0;
   return dailyData.map(day => {
-    cumulative += calculateDailyGDD(day.tMax, day.tMin);
+    cumulative += calculateDailyGDD(day.tMax, day.tMin, tBase);
     return Number(cumulative.toFixed(2));
   });
 };
 
 /**
  * Predicts emergence probability based on GDD and weather triggers.
- * @param {number} gdd 
- * @param {object} triggers { rainLast3Days: boolean, tempEvening: number }
- * @returns {object} { probability: number, status: string }
  */
-export const predictEmergence = (gdd, triggers = {}) => {
+export const predictEmergence = (gdd, speciesKey, triggers = {}) => {
+  const config = SPECIES_CONFIG[speciesKey];
   let probability = 0;
-  let status = "Not active";
+  let status = "";
 
-  if (gdd < CONFIG.THRESHOLD_START * 0.8) {
-    status = "Too early. Development in progress.";
+  if (gdd < config.thresholdStart * 0.8) {
+    status = "Слишком рано. Развитие личинок продолжается.";
     probability = 5;
-  } else if (gdd < CONFIG.THRESHOLD_START) {
-    status = "Getting ready. Emergence expected in 1-2 weeks.";
+  } else if (gdd < config.thresholdStart) {
+    status = "Подготовка. Вылет ожидается через 1-2 недели.";
     probability = 20;
-  } else if (gdd >= CONFIG.THRESHOLD_START && gdd < CONFIG.THRESHOLD_PEAK) {
-    status = "Active! Emergence has started.";
+  } else if (gdd >= config.thresholdStart && gdd < config.thresholdPeak) {
+    status = "Активность! Начало вылета.";
     probability = 60;
     if (triggers.eveningTemp > 20) probability += 20;
     if (!triggers.rain) probability += 10;
-  } else if (gdd >= CONFIG.THRESHOLD_PEAK && gdd < CONFIG.THRESHOLD_PEAK + 200) {
-    status = "Peak Season! High activity expected.";
+  } else if (gdd >= config.thresholdPeak && gdd < config.thresholdPeak + 200) {
+    status = "Пик сезона! Высокая вероятность встречи.";
     probability = 95;
   } else {
-    status = "Season winding down.";
+    status = "Сезон подходит к концу.";
     probability = 30;
   }
 
-  return { probability: Math.min(100, probability), status };
+  return { probability: Math.min(100, probability), status, config };
 };

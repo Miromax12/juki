@@ -11,8 +11,8 @@ const StatusCard = ({ gdd, probability, status, location }) => {
         >
             <div className="flex justify-between items-start mb-6">
                 <div>
-                    <h3 className="text-muted uppercase tracking-wider text-xs font-semibold">Current Status</h3>
-                    <p className="text-2xl font-bold">{location || 'Selected Region'}</p>
+                    <h3 className="text-muted uppercase tracking-wider text-xs font-semibold">Текущий статус</h3>
+                    <p className="text-2xl font-bold">{location || 'Регион не выбран'}</p>
                 </div>
                 <div className={`status-indicator ${probability > 50 ? 'status-active' : ''}`} />
             </div>
@@ -21,14 +21,14 @@ const StatusCard = ({ gdd, probability, status, location }) => {
                 <div>
                     <div className="flex items-center gap-2 text-muted mb-1">
                         <Thermometer size={16} />
-                        <span className="text-xs">Accumulated GDD</span>
+                        <span className="text-xs">Накоплено GDD</span>
                     </div>
                     <p className="text-4xl font-bold text-accent-emerald">{gdd.toFixed(1)}</p>
                 </div>
                 <div>
                     <div className="flex items-center gap-2 text-muted mb-1">
                         <Zap size={16} />
-                        <span className="text-xs">Probability</span>
+                        <span className="text-xs">Вероятность</span>
                     </div>
                     <p className="text-4xl font-bold text-accent-amber">{probability}%</p>
                 </div>
@@ -43,7 +43,7 @@ const StatusCard = ({ gdd, probability, status, location }) => {
             <div className="mt-6 flex gap-4">
                 <div className="flex items-center gap-2 text-xs text-muted">
                     <Wind size={14} />
-                    <span>Optimal evening activity: {'>'}23°C</span>
+                    <span>Оптимальный вылет: {'>'}23°C</span>
                 </div>
             </div>
         </motion.div>

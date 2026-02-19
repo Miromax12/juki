@@ -5,8 +5,8 @@ import { CloudRain, Sun, Thermometer } from 'lucide-react';
 const ForecastGrid = ({ forecastData }) => {
     return (
         <div className="glass-card col-span-full">
-            <h3 className="text-xl font-bold mb-6">Upcoming 7-Day Forecast</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <h3 className="text-xl font-bold mb-6">Прогноз на ближайшие 7 дней</h3>
+            <div className="forecast-grid">
                 {forecastData.map((day, index) => (
                     <motion.div
                         key={day.date}
@@ -14,12 +14,12 @@ const ForecastGrid = ({ forecastData }) => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.05 }}
                         className={`p-4 rounded-2xl border ${day.probability > 70
-                            ? 'bg-emerald-500/10 border-emerald-500/30'
-                            : 'bg-white/5 border-white/10'
+                                ? 'bg-emerald-500/10 border-emerald-500/30'
+                                : 'bg-white/5 border-white/10'
                             } flex flex-col items-center text-center`}
                     >
                         <p className="text-xs text-muted mb-2">
-                            {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
+                            {new Date(day.date).toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' })}
                         </p>
 
                         <div className="my-3">
@@ -44,7 +44,7 @@ const ForecastGrid = ({ forecastData }) => {
                                 />
                             </div>
                             <p className="text-[10px] uppercase tracking-tighter mt-1 font-bold">
-                                {day.probability}% Chance
+                                Шанс {day.probability}%
                             </p>
                         </div>
                     </motion.div>

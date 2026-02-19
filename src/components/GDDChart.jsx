@@ -1,14 +1,12 @@
-import React from 'react';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer, ReferenceLine, Label
 } from 'recharts';
-import { CONFIG } from '../logic/gddCalculator';
 
-const GDDChart = ({ data }) => {
+const GDDChart = ({ data, config }) => {
     return (
         <div className="glass-card col-span-8" style={{ height: '400px' }}>
-            <h3 className="text-xl font-bold mb-6">Thermal Accumulation (GDD)</h3>
+            <h3 className="text-xl font-bold mb-6">Накопление тепла (GDD)</h3>
             <ResponsiveContainer width="100%" height="80%">
                 <AreaChart data={data}>
                     <defs>
@@ -43,11 +41,11 @@ const GDDChart = ({ data }) => {
                     />
 
                     {/* Threshold Lines */}
-                    <ReferenceLine y={CONFIG.THRESHOLD_START} stroke="#f59e0b" strokeDasharray="5 5">
-                        <Label value="Start of Emergence" position="insideBottomRight" fill="#f59e0b" fontSize={10} />
+                    <ReferenceLine y={config.thresholdStart} stroke="#f59e0b" strokeDasharray="5 5">
+                        <Label value="Начало вылета" position="insideBottomRight" fill="#f59e0b" fontSize={10} />
                     </ReferenceLine>
-                    <ReferenceLine y={CONFIG.THRESHOLD_PEAK} stroke="#ef4444" strokeDasharray="5 5">
-                        <Label value="Peak Season" position="insideBottomRight" fill="#ef4444" fontSize={10} />
+                    <ReferenceLine y={config.thresholdPeak} stroke="#ef4444" strokeDasharray="5 5">
+                        <Label value="Пик сезона" position="insideBottomRight" fill="#ef4444" fontSize={10} />
                     </ReferenceLine>
                 </AreaChart>
             </ResponsiveContainer>

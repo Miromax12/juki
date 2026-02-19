@@ -1,19 +1,18 @@
-import React from 'react';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer
 } from 'recharts';
 
 const SeasonalityChart = ({ data }) => {
-    // data format: { "1": 10, "2": 5, ... }
-    const chartData = Object.keys(data).map(month => ({
-        name: new Date(2000, month - 1, 1).toLocaleString('en-US', { month: 'short' }),
+    const monthKeys = Object.keys(data).filter(key => !isNaN(parseInt(key)));
+    const chartData = monthKeys.map(month => ({
+        name: new Date(2000, parseInt(month) - 1, 1).toLocaleString('ru-RU', { month: 'short' }),
         count: data[month]
     }));
 
     return (
-        <div className="glass-card col-span-4" style={{ height: '400px' }}>
-            <h3 className="text-xl font-bold mb-6">Historical Seasonality</h3>
+        <div className="glass-card col-span-full" style={{ height: '400px' }}>
+            <h3 className="text-xl font-bold mb-6">Историческая сезонность</h3>
             <ResponsiveContainer width="100%" height="80%">
                 <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -36,7 +35,7 @@ const SeasonalityChart = ({ data }) => {
                     />
                 </BarChart>
             </ResponsiveContainer>
-            <p className="text-xs text-muted mt-4">Based on iNaturalist research-grade data</p>
+            <p className="text-xs text-muted mt-4">На основе данных iNaturalist</p>
         </div>
     );
 };

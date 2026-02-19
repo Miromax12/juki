@@ -1,16 +1,15 @@
 import axios from 'axios';
 
 const INAT_BASE_URL = 'https://api.inaturalist.org/v1';
-const LUCANUS_CERVUS_TAXON_ID = 47258;
 
 /**
- * Fetch historical observations for Stag Beetle.
+ * Fetch historical observations for a specific species.
  */
-export const fetchObservations = async (params = {}) => {
+export const fetchObservations = async (taxonId, params = {}) => {
     try {
         const response = await axios.get(`${INAT_BASE_URL}/observations`, {
             params: {
-                taxon_id: LUCANUS_CERVUS_TAXON_ID,
+                taxon_id: taxonId,
                 quality_grade: 'research',
                 per_page: 200,
                 ...params
@@ -26,11 +25,11 @@ export const fetchObservations = async (params = {}) => {
 /**
  * Get monthly histogram of observations to show seasonality.
  */
-export const fetchSeasonality = async (placeId = null) => {
+export const fetchSeasonality = async (taxonId, placeId = null) => {
     try {
         const response = await axios.get(`${INAT_BASE_URL}/observations/histogram`, {
             params: {
-                taxon_id: LUCANUS_CERVUS_TAXON_ID,
+                taxon_id: taxonId,
                 date_field: 'observed',
                 interval: 'month',
                 place_id: placeId
