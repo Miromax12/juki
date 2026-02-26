@@ -31,11 +31,11 @@ export const fetchSeasonality = async (taxonId, placeId = null) => {
             params: {
                 taxon_id: taxonId,
                 date_field: 'observed',
-                interval: 'month',
+                interval: 'month_of_year',
                 place_id: placeId
             }
         });
-        return response.data.results.month;
+        return response.data.results.month_of_year;
     } catch (error) {
         console.error('Error fetching seasonality data:', error);
         throw error;
