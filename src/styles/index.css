@@ -522,6 +522,122 @@ input[type="text"]::placeholder {
     font-weight: 400;
 }
 
+/* ─── Insights Card ───────────────────────────────────────── */
+
+.insight-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.insight-deficit-row {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.insight-deficit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.insight-deficit-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.insight-deficit-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-amber);
+}
+
+.insight-badge-reached {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent-emerald);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.insight-prediction-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.2rem;
+}
+
+.insight-pred-date {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.insight-pred-days {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+.insight-no-rate {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.insight-rate-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.insight-rate-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-emerald);
+    flex-shrink: 0;
+}
+
+.insight-rate-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 0.15rem;
+}
+
+.insight-rate-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.insight-rate-unit {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
 /* ─── Utility Classes ─────────────────────────────────────── */
 
 .flex            { display: flex; }

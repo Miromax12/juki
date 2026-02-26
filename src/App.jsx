@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { fetchSeasonality } from './services/inaturalist';
 import { fetchWeatherData } from './services/weather';
-import { calculateCumulativeGDD, predictEmergence, SPECIES_CONFIG } from './logic/gddCalculator';
+import { calculateCumulativeGDD, predictEmergence, SPECIES_CONFIG, calculateGDDRate, calculateGDDDeficit, predictThresholdDate } from './logic/gddCalculator';
 import StatusCard from './components/StatusCard';
 import GDDChart from './components/GDDChart';
 import SeasonalityChart from './components/SeasonalityChart';
 import ForecastGrid from './components/ForecastGrid';
+import InsightsCard from './components/InsightsCard';
 import './styles/index.css';
 
 const I18N = {
@@ -68,6 +69,26 @@ function App() {
   const prediction = useMemo(
     () => predictEmergence(latestGDD, speciesKey, { rain: lastDay.rain, eveningTemp: lastDay.temp }),
     [latestGDD, speciesKey, lastDay]
+  );
+
+  const gddRate = useMemo(
+    () => calculateGDDRate(gddValues.slice(0, safeTodayIndex + 1)),
+    [gddValues, safeTodayIndex]
+  );
+
+  const deficits = useMemo(
+    () => calculateGDDDeficit(latestGDD, speciesKey),
+    [latestGDD, speciesKey]
+  );
+
+  const emergencePrediction = useMemo(
+    () => predictThresholdDate(latestGDD, currentSpecies.thresholdStart, gddRate, todayStr),
+    [latestGDD, currentSpecies.thresholdStart, gddRate, todayStr]
+  );
+
+  const peakPrediction = useMemo(
+    () => predictThresholdDate(latestGDD, currentSpecies.thresholdPeak, gddRate, todayStr),
+    [latestGDD, currentSpecies.thresholdPeak, gddRate, todayStr]
   );
 
   const handleLocationSubmit = useCallback((e) => {
@@ -163,6 +184,13 @@ function App() {
         <SeasonalityChart data={seasonalityData} />
 
         {forecastData.length > 0 && <ForecastGrid forecastData={forecastData} />}
+
+        <InsightsCard
+          deficits={deficits}
+          emergencePrediction={emergencePrediction}
+          peakPrediction={peakPrediction}
+          gddRate={gddRate}
+        />
 
         <div className="col-span-8 glass-card">
           <h3 className="text-xl font-bold mb-4">{lang.scienceTitle}</h3>
