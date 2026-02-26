@@ -44,6 +44,46 @@ export const calculateCumulativeGDD = (dailyData, tBase) => {
 };
 
 /**
+ * Calculates the average GDD per day over the last `windowDays` days.
+ * Useful for projecting when a threshold will be reached.
+ */
+export const calculateGDDRate = (gddValues, windowDays = 14) => {
+  if (gddValues.length < 2) return 0;
+  const len = gddValues.length;
+  const startIdx = Math.max(0, len - windowDays - 1);
+  const delta = gddValues[len - 1] - gddValues[startIdx];
+  const days = len - 1 - startIdx;
+  return days > 0 ? delta / days : 0;
+};
+
+/**
+ * Predicts the calendar date when a GDD threshold will be reached.
+ * Returns null if the threshold is already met or the rate is zero.
+ */
+export const predictThresholdDate = (currentGDD, targetGDD, gddPerDay, todayStr) => {
+  if (currentGDD >= targetGDD) return { date: null, daysLeft: 0 };
+  if (gddPerDay <= 0) return { date: null, daysLeft: null };
+  const daysLeft = Math.ceil((targetGDD - currentGDD) / gddPerDay);
+  const targetDate = new Date(todayStr);
+  targetDate.setDate(targetDate.getDate() + daysLeft);
+  return {
+    date: targetDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }),
+    daysLeft
+  };
+};
+
+/**
+ * Calculates how many GDD units are still needed to reach each threshold.
+ */
+export const calculateGDDDeficit = (currentGDD, speciesKey) => {
+  const config = SPECIES_CONFIG[speciesKey];
+  return {
+    toEmergence: Math.max(0, config.thresholdStart - currentGDD),
+    toPeak: Math.max(0, config.thresholdPeak - currentGDD)
+  };
+};
+
+/**
  * Predicts emergence probability based on GDD and weather triggers.
  */
 export const predictEmergence = (gdd, speciesKey, triggers = {}) => {

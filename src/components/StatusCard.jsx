@@ -1,8 +1,13 @@
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { Thermometer, Wind, Zap } from 'lucide-react';
+import { Thermometer, Wind, TrendingUp } from 'lucide-react';
 
-const StatusCard = ({ gdd, probability, status, location }) => {
+const StatusCard = ({ gdd, probability, status, location, species }) => {
+    const progressToStart = Math.min(100, (gdd / species.thresholdStart) * 100);
+    const isEmergence = gdd >= species.thresholdStart;
+    const progressToPeak = isEmergence
+        ? Math.min(100, ((gdd - species.thresholdStart) / (species.thresholdPeak - species.thresholdStart)) * 100)
+        : 0;
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -11,39 +16,59 @@ const StatusCard = ({ gdd, probability, status, location }) => {
         >
             <div className="flex justify-between items-start mb-6">
                 <div>
-                    <h3 className="text-muted uppercase tracking-wider text-xs font-semibold">Текущий статус</h3>
+                    <h3 className="status-label">Текущий статус</h3>
                     <p className="text-2xl font-bold">{location || 'Регион не выбран'}</p>
                 </div>
                 <div className={`status-indicator ${probability > 50 ? 'status-active' : ''}`} />
             </div>
 
-            <div className="flex items-center gap-12 my-8">
+            <div className="status-metrics">
                 <div>
-                    <div className="flex items-center gap-2 text-muted mb-1">
+                    <div className="metric-label">
                         <Thermometer size={16} />
-                        <span className="text-xs">Накоплено GDD</span>
+                        <span>Накоплено GDD</span>
                     </div>
-                    <p className="text-4xl font-bold text-accent-emerald">{gdd.toFixed(1)}</p>
+                    <p className="metric-value text-accent-emerald">{gdd.toFixed(1)}</p>
                 </div>
                 <div>
-                    <div className="flex items-center gap-2 text-muted mb-1">
-                        <Zap size={16} />
-                        <span className="text-xs">Вероятность</span>
+                    <div className="metric-label">
+                        <TrendingUp size={16} />
+                        <span>Вероятность</span>
                     </div>
-                    <p className="text-4xl font-bold text-accent-amber">{probability}%</p>
+                    <p className="metric-value text-accent-amber">{probability}%</p>
                 </div>
             </div>
 
-            <div className="bg-white/5 rounded-xl p-4 border border-white/5">
-                <p className="text-lg font-medium leading-relaxed">
-                    {status}
-                </p>
+            <div className="gdd-progress-section">
+                <div className="gdd-progress-header">
+                    <span>До начала вылета</span>
+                    <span className="gdd-progress-value">{gdd.toFixed(0)} / {species.thresholdStart}</span>
+                </div>
+                <div className="progress-track">
+                    <div className="progress-fill progress-emerald" style={{ width: `${progressToStart}%` }} />
+                </div>
+
+                {isEmergence && (
+                    <>
+                        <div className="gdd-progress-header" style={{ marginTop: '0.75rem' }}>
+                            <span>До пика сезона</span>
+                            <span className="gdd-progress-value">{gdd.toFixed(0)} / {species.thresholdPeak}</span>
+                        </div>
+                        <div className="progress-track">
+                            <div className="progress-fill progress-amber" style={{ width: `${progressToPeak}%` }} />
+                        </div>
+                    </>
+                )}
             </div>
 
-            <div className="mt-6 flex gap-4">
-                <div className="flex items-center gap-2 text-xs text-muted">
+            <div className="status-message">
+                <p>{status}</p>
+            </div>
+
+            <div className="mt-6">
+                <div className="metric-label">
                     <Wind size={14} />
-                    <span>Оптимальный вылет: {'>'}23°C</span>
+                    <span>Оптимальный вылет: {'>'}{species.optimalTemp}°C</span>
                 </div>
             </div>
         </motion.div>
