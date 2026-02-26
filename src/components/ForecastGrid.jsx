@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { CloudRain, Sun, Thermometer } from 'lucide-react';
 
@@ -10,19 +9,16 @@ const ForecastGrid = ({ forecastData }) => {
                 {forecastData.map((day, index) => (
                     <motion.div
                         key={day.date}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: index * 0.05 }}
-                        className={`p-4 rounded-2xl border ${day.probability > 70
-                                ? 'bg-emerald-500/10 border-emerald-500/30'
-                                : 'bg-white/5 border-white/10'
-                            } flex flex-col items-center text-center`}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.06, ease: 'easeOut' }}
+                        className={`forecast-card ${day.probability > 70 ? 'forecast-card-active' : ''}`}
                     >
-                        <p className="text-xs text-muted mb-2">
+                        <p className="forecast-date">
                             {new Date(day.date).toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' })}
                         </p>
 
-                        <div className="my-3">
+                        <div className="forecast-icon">
                             {day.rain ? (
                                 <CloudRain className="text-blue-400" size={24} />
                             ) : (
@@ -30,22 +26,21 @@ const ForecastGrid = ({ forecastData }) => {
                             )}
                         </div>
 
-                        <div className="flex items-center gap-1 text-sm font-semibold mb-1">
+                        <div className="forecast-temp">
                             <Thermometer size={12} className="text-muted" />
                             <span>{Math.round(day.tMax)}°</span>
                         </div>
 
-                        <div className="mt-2 w-full">
-                            <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                <div
-                                    className={`h-full rounded-full ${day.probability > 70 ? 'bg-emerald-500' : 'bg-amber-500'
-                                        }`}
-                                    style={{ width: `${day.probability}%` }}
+                        <div className="forecast-prob-wrap">
+                            <div className="forecast-prob-track">
+                                <motion.div
+                                    className={`forecast-prob-fill ${day.probability > 70 ? 'prob-high' : 'prob-low'}`}
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${day.probability}%` }}
+                                    transition={{ delay: index * 0.06 + 0.2, duration: 0.6, ease: 'easeOut' }}
                                 />
                             </div>
-                            <p className="text-[10px] uppercase tracking-tighter mt-1 font-bold">
-                                Шанс {day.probability}%
-                            </p>
+                            <p className="forecast-prob-label">Шанс {day.probability}%</p>
                         </div>
                     </motion.div>
                 ))}
