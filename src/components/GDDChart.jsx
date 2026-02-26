@@ -17,7 +17,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 const GDDChart = ({ data, config }) => {
     return (
-        <div className="glass-card col-span-8 gdd-chart-card">
+        <div className="glass-card col-span-8 gdd-chart-card" style={{ minHeight: '300px' }}>
             <h3 className="text-xl font-bold mb-6">Накопление тепла (GDD)</h3>
             <ResponsiveContainer width="100%" height="80%">
                 <AreaChart data={data}>
