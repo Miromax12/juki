@@ -98,24 +98,28 @@ function App() {
 
   useEffect(() => {
     async function init() {
+      setLoading(true);
+
       try {
-        setLoading(true);
         const seasonality = await fetchSeasonality(currentSpecies.taxonId);
         setSeasonalityData(seasonality);
+      } catch (error) {
+        console.error("Seasonality fetch error:", error);
+      }
 
+      try {
         const now = new Date();
         const startOfYear = `${now.getFullYear()}-01-01`;
         const forecastDate = new Date();
         forecastDate.setDate(now.getDate() + 7);
         const endDate = forecastDate.toISOString().split('T')[0];
-
         const weather = await fetchWeatherData(location, startOfYear, endDate);
         setWeatherData(weather);
-        setLoading(false);
       } catch (error) {
-        console.error("Initialization error:", error);
-        setLoading(false);
+        console.error("Weather fetch error:", error);
       }
+
+      setLoading(false);
     }
     init();
   }, [location, speciesKey, currentSpecies.taxonId]);
